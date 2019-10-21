@@ -14,6 +14,8 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        //accentColor: Colors.orange,
+        fontFamily: 'Quicksand',
       ),
       home: MyHomePag(title: 'Flutter Demo Home Page'),
     );
@@ -55,7 +57,10 @@ class _MyHomePagState extends State<MyHomePag> {
         builder: (context) {
           //builder: (context) {
           return GestureDetector(
-              onTap: () {}, child: NewTransaction(_addTransaction),behavior: HitTestBehavior.opaque,);
+            onTap: () {},
+            child: NewTransaction(_addTransaction),
+            behavior: HitTestBehavior.opaque,
+          );
         });
   }
 
@@ -63,7 +68,10 @@ class _MyHomePagState extends State<MyHomePag> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("My app"),
+        backgroundColor: Colors.purple,
+        title: Text("Expense Tracker",style: TextStyle(fontFamily: 'Quicksand',
+        //fontWeight: FontWeight.bold,
+        ),),
         actions: <Widget>[
           IconButton(
             icon: Icon(
@@ -74,6 +82,7 @@ class _MyHomePagState extends State<MyHomePag> {
         ],
       ),
       body: Container(
+        color: Color.fromRGBO(250, 250, 250, 1),
         child: (ListView(
           children: <Widget>[
             Container(
@@ -93,7 +102,10 @@ class _MyHomePagState extends State<MyHomePag> {
         )),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      //By default uses the accent color if available,else falls back to primary swatch
       floatingActionButton: FloatingActionButton(
+        //backgroundColor: Colors.black,
+        //backgroundColor: Theme.of(context).primaryColor,
         child: Icon(
           Icons.add,
         ),
