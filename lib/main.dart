@@ -16,6 +16,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         //accentColor: Colors.orange,
         fontFamily: 'Quicksand',
+        
       ),
       home: MyHomePag(title: 'Flutter Demo Home Page'),
     );
@@ -33,7 +34,7 @@ class MyHomePag extends StatefulWidget {
 
 class _MyHomePagState extends State<MyHomePag> {
   final List<Transaction> allTransations = [
-    Transaction(
+    /* Transaction(
         name: "first",
         description: "desc1",
         date: DateTime.now(),
@@ -42,7 +43,7 @@ class _MyHomePagState extends State<MyHomePag> {
         name: "second",
         description: "desc2",
         date: DateTime.now(),
-        amount: 122.23),
+        amount: 122.23), */
   ];
 
   void _addTransaction(Transaction tr) {

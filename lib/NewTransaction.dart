@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:tracker/model/transaction.dart';
 
@@ -19,7 +21,7 @@ class _NewTransactionState extends State<NewTransaction> {
     widget._addTransaction(Transaction(
         name: nameController.text,
         description: descController.text,
-        amount: 22.22,
+        amount: double.parse(Random(22).nextDouble().toStringAsFixed(2)),
         date: DateTime.now()));
 
     //close the topmost scree,currently add new transaction modal
@@ -72,7 +74,8 @@ class _NewTransactionState extends State<NewTransaction> {
             margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: TextField(
               controller: descController,
-              keyboardType: TextInputType.number,
+              keyboardType: TextInputType.text,
+             // keyboardType: TextInputType.number,
               style: TextStyle(color: Colors.black, fontSize: 22),
               onSubmitted: (_) => handleSubmit(),
             ),
