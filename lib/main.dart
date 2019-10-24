@@ -1,116 +1,138 @@
 import 'package:flutter/material.dart';
-import 'package:tracker/TransactionsList.dart';
-//import 'package:tracker/DisplayTransactions.dart';
-import './NewTransaction.dart';
-import './model/transaction.dart';
+
+import './widgets/new_transaction.dart';
+import './widgets/transaction_list.dart';
+import './widgets/chart.dart';
+import './models/transaction.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Personal Expenses',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-        //accentColor: Colors.orange,
-        fontFamily: 'Quicksand',
-        
-      ),
-      home: MyHomePag(title: 'Flutter Demo Home Page'),
+          primarySwatch: Colors.purple,
+          accentColor: Colors.amber,
+          // errorColor: Colors.red,
+          fontFamily: 'Quicksand',
+          textTheme: ThemeData.light().textTheme.copyWith(
+                title: TextStyle(
+                  fontFamily: 'OpenSans',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+                button: TextStyle(color: Colors.white),
+              ),
+          appBarTheme: AppBarTheme(
+            textTheme: ThemeData.light().textTheme.copyWith(
+                  title: TextStyle(
+                    fontFamily: 'OpenSans',
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+          )),
+      home: MyHomePage(),
     );
   }
 }
 
-class MyHomePag extends StatefulWidget {
-  final String title;
-
-  MyHomePag({this.title});
-
+class MyHomePage extends StatefulWidget {
+  // String titleInput;
+  // String amountInput;
   @override
-  _MyHomePagState createState() => _MyHomePagState();
+  _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePagState extends State<MyHomePag> {
-  final List<Transaction> allTransations = [
-    /* Transaction(
-        name: "first",
-        description: "desc1",
-        date: DateTime.now(),
-        amount: 22.23),
-    Transaction(
-        name: "second",
-        description: "desc2",
-        date: DateTime.now(),
-        amount: 122.23), */
+class _MyHomePageState extends State<MyHomePage> {
+  final List<Transaction> _userTransactions = [
+    // Transaction(
+    //   id: 't1',
+    //   title: 'New Shoes',
+    //   amount: 69.99,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   id: 't2',
+    //   title: 'Weekly Groceries',
+    //   amount: 16.53,
+    //   date: DateTime.now(),
+    // ),
   ];
 
-  void _addTransaction(Transaction tr) {
+  List<Transaction> get _recentTransactions {
+    return _userTransactions.where((tx) {
+      return tx.date.isAfter(
+        DateTime.now().subtract(
+          Duration(days: 7),
+        ),
+      );
+    }).toList();
+  }
+
+  void _addNewTransaction(
+      String txTitle, double txAmount, DateTime chosenDate) {
+    final newTx = Transaction(
+      title: txTitle,
+      amount: txAmount,
+      date: chosenDate,
+      id: DateTime.now().toString(),
+    );
+
     setState(() {
-      allTransations.add(tr);
+      _userTransactions.add(newTx);
     });
   }
 
-  void _startNewTransactionAdd(BuildContext ctx) {
+  void _startAddNewTransaction(BuildContext ctx) {
     showModalBottomSheet(
-        context: ctx,
-        builder: (context) {
-          //builder: (context) {
-          return GestureDetector(
-            onTap: () {},
-            child: NewTransaction(_addTransaction),
-            behavior: HitTestBehavior.opaque,
-          );
-        });
+      context: ctx,
+      builder: (_) {
+        return GestureDetector(
+          onTap: () {},
+          child: NewTransaction(_addNewTransaction),
+          behavior: HitTestBehavior.opaque,
+        );
+      },
+    );
+  }
+
+  void _deleteTransaction(String id) {
+    setState(() {
+      _userTransactions.removeWhere((tx) => tx.id == id);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.purple,
-        title: Text("Expense Tracker",style: TextStyle(fontFamily: 'Quicksand',
-        //fontWeight: FontWeight.bold,
-        ),),
+        title: Text(
+          'Personal Expenses',
+        ),
         actions: <Widget>[
           IconButton(
-            icon: Icon(
-              Icons.add,
-            ),
-            onPressed: () => _startNewTransactionAdd(context),
-          )
+            icon: Icon(Icons.add),
+            onPressed: () => _startAddNewTransaction(context),
+          ),
         ],
       ),
-      body: Container(
-        color: Color.fromRGBO(250, 250, 250, 1),
-        child: (ListView(
+      body: SingleChildScrollView(
+        child: Column(
+          // mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Container(
-              margin: EdgeInsets.all(20),
-              padding: EdgeInsets.all(20),
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.all(10),
-                    //child: DisplayTransactions(),
-                    child: TransactionList(allTransations),
-                  )
-                ],
-              ),
-            ),
+            Chart(_recentTransactions),
+            TransactionList(_userTransactions, _deleteTransaction),
           ],
-        )),
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      //By default uses the accent color if available,else falls back to primary swatch
       floatingActionButton: FloatingActionButton(
-        //backgroundColor: Colors.black,
-        //backgroundColor: Theme.of(context).primaryColor,
-        child: Icon(
-          Icons.add,
-        ),
-        onPressed: () => _startNewTransactionAdd(context),
+        child: Icon(Icons.add),
+        onPressed: () => _startAddNewTransaction(context),
       ),
     );
   }
