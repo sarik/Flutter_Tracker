@@ -9,10 +9,11 @@ class ChartBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool landScapeMode = MediaQuery.of(context).orientation == Orientation.landscape;
     return Column(
       children: <Widget>[
         Container(
-          height: 20,
+          height: landScapeMode?40:20,
           child: FittedBox(
             child: Text('\$${spendingAmount.toStringAsFixed(0)}'),
           ),

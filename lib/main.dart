@@ -157,6 +157,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    print("state chaned");
+    bool landScapeMode = MediaQuery.of(context).orientation == Orientation.landscape;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -174,6 +176,7 @@ class _MyHomePageState extends State<MyHomePage> {
           // mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
+            if(landScapeMode)
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -189,7 +192,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 )
               ],
             ),
-            _displayChart? Chart(_recentTransactions):
+            if(!landScapeMode)
+            Container( child: Chart(_recentTransactions)),
+            if(!landScapeMode) 
+             TransactionList(_userTransactions, _deleteTransaction),
+            if(landScapeMode)
+            _displayChart? Container(height:230, child: Chart(_recentTransactions)):
             TransactionList(_userTransactions, _deleteTransaction),
           ],
         ),
