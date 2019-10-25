@@ -53,10 +53,8 @@ class TransactionList extends StatelessWidget {
                       //radius: 30,
                       child: Padding(
                         padding: EdgeInsets.all(6),
-                        child: 
-                        FittedBox(
-                          child:
-                           Text('\$${transactions[index].amount}'),
+                        child: FittedBox(
+                          child: Text('\$${transactions[index].amount}'),
                         ),
                       ),
                     ),
@@ -67,11 +65,31 @@ class TransactionList extends StatelessWidget {
                     subtitle: Text(
                       DateFormat.yMMMd().format(transactions[index].date),
                     ),
-                    trailing: IconButton(
-                      icon: Icon(Icons.delete),
-                      color: Theme.of(context).errorColor,
-                      onPressed: () => deleteTx(transactions[index].id),
-                    ),
+                    trailing: MediaQuery.of(context).size.width < 412
+                        ? IconButton(
+                            icon: Icon(Icons.delete),
+                            color: Theme.of(context).errorColor,
+                            onPressed: () => deleteTx(transactions[index].id))
+                        : Container(
+                            decoration: BoxDecoration(
+                                border:
+                                    Border.all(width: 2, color: Colors.black),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10))),
+                            child: FlatButton.icon(
+                              onPressed: () => deleteTx(transactions[index].id),
+                              label: Text(
+                                "Remove",
+                                style: (TextStyle(fontWeight: FontWeight.bold)),
+                              ),
+                              icon: Icon(
+                                Icons.delete,
+                                color: Colors.red,
+                              ),
+                              textColor: Colors.red,
+                              color: Colors.white,
+                            ),
+                          ),
                   ),
                 );
               },

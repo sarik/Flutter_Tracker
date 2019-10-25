@@ -157,8 +157,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    print("state chaned");
-    bool landScapeMode = MediaQuery.of(context).orientation == Orientation.landscape;
+    //Note:final and not constant,since _mediaQuery initilaizes each time for build
+    //(including when device orientation is changed)
+    //and hence it is only initialized with values at runtime
+    final _mediaQuery = MediaQuery.of(context);
+    //device width 411
+    print("state chaned ${_mediaQuery.size.width}");
+    bool landScapeMode = _mediaQuery.orientation == Orientation.landscape;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -176,29 +181,29 @@ class _MyHomePageState extends State<MyHomePage> {
           // mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            if(landScapeMode)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text("Show Chart",
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-                Switch(
-                  value: _displayChart,
-                  onChanged: (val) {
-                    setState(() {
-                      _displayChart = !_displayChart;
-                    });
-                  },
-                )
-              ],
-            ),
-            if(!landScapeMode)
-            Container( child: Chart(_recentTransactions)),
-            if(!landScapeMode) 
-             TransactionList(_userTransactions, _deleteTransaction),
-            if(landScapeMode)
-            _displayChart? Container(height:230, child: Chart(_recentTransactions)):
-            TransactionList(_userTransactions, _deleteTransaction),
+            if (landScapeMode)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text("Show Chart",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  Switch(
+                    value: _displayChart,
+                    onChanged: (val) {
+                      setState(() {
+                        _displayChart = !_displayChart;
+                      });
+                    },
+                  )
+                ],
+              ),
+            if (!landScapeMode) Container(child: Chart(_recentTransactions)),
+            if (!landScapeMode)
+              TransactionList(_userTransactions, _deleteTransaction),
+            if (landScapeMode)
+              _displayChart
+                  ? Container(height: 230, child: Chart(_recentTransactions))
+                  : TransactionList(_userTransactions, _deleteTransaction),
           ],
         ),
       ),
